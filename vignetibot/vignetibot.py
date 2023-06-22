@@ -90,9 +90,7 @@ async def ordine(update: Update, context: CallbackContext):
         text += f"{file}: {area} m²\n"
     await update.message.reply_text(text)
 
-async def prop(update: Update, context: CallbackContext):
-    # Definisci i dati di input
-    input_data = {
+input_data = {
         'Bussolengo': 24280000,
         'Castelnuovo del Garda': 13450000,
         'Lazise': 65000000,
@@ -105,6 +103,22 @@ async def prop(update: Update, context: CallbackContext):
         'Vigasio': 30800000,
         'Villafranca di Verona': 57430000
     }
+
+async def prop(update: Update, context: CallbackContext,):
+
+    input_data = {
+            'Bussolengo': 24280000,
+            'Castelnuovo del Garda': 13450000,
+            'Lazise': 65000000,
+            'Mozzecane': 24700000,
+            'Pastrengo': 8960000,
+            'Pescantina': 19700000,
+            'Sommacampagna': 40910000,
+            'Sona': 41140000,
+            'Valeggio sul Mincio': 63900000,
+            'Vigasio': 30800000,
+            'Villafranca di Verona': 57430000
+        }
 
     # Calcola l'area totale dei vigneti restituita dalla funzione "area()"
     area_vigneti = sum(aree_totali_metri_quadrati)
@@ -131,21 +145,6 @@ async def propaese(update: Update, context: CallbackContext):
         text = f"{csv_files[i]}: {area} m²\n"
     # Salva il dizionario nel contesto
     context.user_data['aree_per_paese'] = aree_per_paese
-    
-    # Definisci le aree dei paesi specificati
-    aree_specificate = {
-        'Bussolengo': 24280000,
-        'Castelnuovo del Garda': 13450000,
-        'Lazise': 65000000,
-        'Mozzecane': 24700000,
-        'Pastrengo': 8960000,
-        'Pescantina': 19700000,
-        'Sommacampagna': 40910000,
-        'Sona': 41140000,
-        'Valeggio sul Mincio': 63900000,
-        'Vigasio': 30800000,
-        'Villafranca di Verona': 57430000
-    }
     
     # Calcola la somma delle aree totali
     area_totale = sum(aree_per_paese.values())
