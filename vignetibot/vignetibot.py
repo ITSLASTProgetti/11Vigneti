@@ -56,7 +56,7 @@ def calcola_area_totale(file):
                 prima_riga = False
                 continue  # Salta la prima riga del file CSV
             area_pollici_quadrati = float(row[3])  # Indicizza il valore della colonna 'area' in pollici quadrati
-            area_metri_quadrati = area_pollici_quadrati * 0.00064516  # Converti l'area in metri quadrati
+            area_metri_quadrati = area_pollici_quadrati / 1538 # Converti l'area in metri quadrati
             area_totale += area_metri_quadrati
         aree_totali_metri_quadrati.append(area_totale)
 
