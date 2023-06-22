@@ -90,20 +90,6 @@ async def ordine(update: Update, context: CallbackContext):
         text += f"{file}: {area} m²\n"
     await update.message.reply_text(text)
 
-input_data = {
-        'Bussolengo': 24280000,
-        'Castelnuovo del Garda': 13450000,
-        'Lazise': 65000000,
-        'Mozzecane': 24700000,
-        'Pastrengo': 8960000,
-        'Pescantina': 19700000,
-        'Sommacampagna': 40910000,
-        'Sona': 41140000,
-        'Valeggio sul Mincio': 63900000,
-        'Vigasio': 30800000,
-        'Villafranca di Verona': 57430000
-    }
-
 async def prop(update: Update, context: CallbackContext,):
 
     input_data = {
