@@ -9,13 +9,20 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Callb
 with open("token.txt", "r") as f:
     TOKEN = f.read()
     #print("Il tuo token è ", TOKEN)
+
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("""Per vedere i comandi disponibili: /help""")
+
+
+
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("""Comandi disponibili:
-    /paese: scegli il paese
+    /paese: scegli il paese che vuoi per vedere la mappa dei vigneti
     /area: per vedere l'area occupata dai vigneti nei singoli paesi
     /ordine: per vedere l'area occupata dai vigneti nei singoli paesi (in ordine decrescente)
-    /prop: per vedere la proporzione tra l'area totale dei paesi di verona e l'area dei vigneti dei paesi di verona
-    /propaese: per vedere la proporzione tra l'area dei singoli paesi di verona e l'area dei dei vigneti di ogni singolo paese
+    /prop per vedere la proporzione in percentuale tra l'area totale dei paesi di verona e l'area totale dei dei vigneti di ogni singolo 
+    /propaese: per vedere la proporzione in percentuale tra l'area dei singoli paesi di verona e l'area dei dei vigneti di ogni singolo paese
         """)
 async def paese(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [[InlineKeyboardButton("bussolengo", url='http://umap.openstreetmap.fr/it/map/bussolengo_931563?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&allowEdit=false&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false&captionMenus=true'),
@@ -93,31 +100,31 @@ async def ordine(update: Update, context: CallbackContext):
 async def prop(update: Update, context: CallbackContext,):
 
     input_data = {
-            'Bussolengo': 24280000,
-            'Castelnuovo del Garda': 13450000,
-            'Lazise': 65000000,
-            'Mozzecane': 24700000,
-            'Pastrengo': 8960000,
-            'Pescantina': 19700000,
-            'Sommacampagna': 40910000,
-            'Sona': 41140000,
-            'Valeggio sul Mincio': 63900000,
-            'Vigasio': 30800000,
-            'Villafranca di Verona': 57430000
+            'Bussolengo': 24280.000,
+            'Castelnuovo del Garda': 13450.000,
+            'Lazise': 65000.000,
+            'Mozzecane': 24700.000,
+            'Pastrengo': 8960.000,
+            'Pescantina': 19700.000,
+            'Sommacampagna': 40910.000,
+            'Sona': 41140.000,
+            'Valeggio sul Mincio': 63900.000,
+            'Vigasio': 30800.000,
+            'Villafranca di Verona': 57430.000
         }
 
     # Calcola l'area totale dei vigneti restituita dalla funzione "area()"
     area_vigneti = sum(aree_totali_metri_quadrati)
 
     # Calcola l'area totale dei vigneti in base ai dati di input
-    area_vigneti_input = sum(input_data.values())
+    area_paesi = sum(input_data.values())
 
     # Calcola la proporzione tra l'area dei vigneti restituita dalla funzione "area()" e l'area dei vigneti in base ai dati di input
-    proporzione = area_vigneti_input / area_vigneti
+    proporzione = float(area_vigneti / area_paesi)*100
 
     # Crea il testo di risposta
     text = f"Area totale dei vigneti: {area_vigneti} m²\n"
-    text += f"Area totale dei paesi: {area_vigneti_input} m²\n"
+    text += f"Area totale dei paesi: {area_paesi} m²\n"
     text += f"Proporzione dell'area totale dei paesi rispetto all'area totale dei vigneti: {proporzione:.2%}"
 
 
@@ -147,6 +154,7 @@ async def propaese(update: Update, context: CallbackContext):
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('help', help))
     app.add_handler(CommandHandler('paese', paese))
     app.add_handler(CommandHandler('area', area))
