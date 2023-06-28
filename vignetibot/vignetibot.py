@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 import os
 import csv
+from collections import Counter
 from telegram import Update
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackContext
@@ -83,20 +84,23 @@ aree_totali_metri_quadrati_ordinate = sorted(aree_totali_metri_quadrati, reverse
 async def area(update: Update, context: CallbackContext):
     text = "Area occupata dai vigneti nei singoli paesi:\n\n"
     for i, area in enumerate(aree_totali_metri_quadrati):
-        text += f"{csv_files[i]}: {area} m²\n"
+        # Estrarre il nome del paese dal nome del file
+        country = os.path.splitext(os.path.basename(csv_files[i]))[0][6:]
+        text += f"{country}: {area} m²\n"
     await update.message.reply_text(text)
-
   
 
 # Funzione per mostrare le aree totali dei file CSV in ordine decrescente in metri quadrati
 async def ordine(update: Update, context: CallbackContext):
     text = "Area occupata dai vigneti nei singoli paesi (in ordine decrescente):\n\n"
-    for area in aree_totali_metri_quadrati_ordinate:
+    counter = Counter(aree_totali_metri_quadrati_ordinate)
+    for area, count in counter.most_common():
         index = aree_totali_metri_quadrati.index(area)
-        file = csv_files[index]
-        text += f"{file}: {area} m²\n"
+        # Estrarre il nome del paese dal nome del file
+        country = os.path.splitext(os.path.basename(csv_files[index]))[0][6:]
+        text += f"{country}: {area} m²\n"
     await update.message.reply_text(text)
-
+    
 async def prop(update: Update, context: CallbackContext,):
 
     input_data = {
@@ -134,7 +138,9 @@ async def prop(update: Update, context: CallbackContext,):
 async def propaese(update: Update, context: CallbackContext):
     aree_per_paese = {}
     for i, area in enumerate(aree_totali_metri_quadrati):
-        aree_per_paese[csv_files[i]] = area
+        # Estrarre il nome del paese dal nome del file
+        country = os.path.splitext(os.path.basename(csv_files[i]))[0][6:]
+        aree_per_paese[country] = area
         text = f"{csv_files[i]}: {area} m²\n"
     # Salva il dizionario nel contesto
     context.user_data['aree_per_paese'] = aree_per_paese
@@ -149,7 +155,6 @@ async def propaese(update: Update, context: CallbackContext):
         text_prop += f"{paese}: {proporzione:.2%}\n"
     
     await update.message.reply_text(text_prop)
-
 
 
 def main():
